@@ -52,9 +52,11 @@ export default defineConfig({
     ],
     search: {
       provider: 'local',
-      options: { translations: {
-        button: { buttonText: '搜索文档', buttonAriaLabel: '搜索文档' },
+      options: { detailedView: true, translations: {
+        button: { buttonText: '搜索或选择教程', buttonAriaLabel: '搜索或选择教程' },
         modal: {
+          displayDetails: '显示详细结果',
+          backButtonTitle: '关闭搜索',
           noResultsText: '没有找到相关内容',
           resetButtonTitle: '清除查询',
           footer: { selectText: '选择', navigateText: '切换', closeText: '关闭' }
