@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitepress'
+﻿import { defineConfig } from 'vitepress'
 
 const base = process.env.DOCS_BASE || '/'
 
@@ -6,11 +6,13 @@ export default defineConfig({
   lang: 'zh-CN',
   title: 'AI 工具接入指南',
   description: 'CodeFlow API 的 AI 编程工具与客户端配置教程',
+  appearance: 'dark',
   base,
   lastUpdated: true,
   head: [
-    ['meta', { name: 'theme-color', content: '#10b981' }],
-    ['meta', { name: 'referrer', content: 'strict-origin-when-cross-origin' }]
+    ['meta', { name: 'theme-color', content: '#0d0d0d' }],
+    ['meta', { name: 'referrer', content: 'strict-origin-when-cross-origin' }],
+    ['link', { rel: 'icon', href: `${base}logo.svg`, type: 'image/svg+xml' }]
   ],
   themeConfig: {
     logo: { src: '/logo.svg', alt: 'AI 工具接入指南' },
@@ -19,6 +21,7 @@ export default defineConfig({
       { text: '首页', link: '/' },
       { text: '快速开始', link: '/guide/quick-start' },
       { text: '软件教程', items: [
+        { text: '全部软件', link: '/tools/' },
         { text: 'Claude Code', link: '/tools/claude-code' },
         { text: 'Codex', link: '/tools/codex' },
         { text: 'Cursor', link: '/tools/cursor' },
@@ -34,6 +37,7 @@ export default defineConfig({
         { text: '模型与计费', link: '/guide/models-and-billing' }
       ] },
       { text: '软件教程', collapsed: false, items: [
+        { text: '全部软件', link: '/tools/' },
         { text: 'Claude Code', link: '/tools/claude-code' },
         { text: 'Codex CLI 与 Desktop', link: '/tools/codex' },
         { text: 'CC Switch', link: '/tools/cc-switch' },
@@ -73,3 +77,4 @@ export default defineConfig({
     }
   }
 })
+

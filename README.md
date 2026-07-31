@@ -2,6 +2,11 @@
 
 一个使用 VitePress 构建的中文文档网站，整理 CodeFlow API 在不同 AI 编程工具和客户端中的配置方法。
 
+## 在线网站
+
+- 文档站：<https://khiqwq.github.io/ai-client-guides/>
+- GitHub 仓库：<https://github.com/khiqwq/ai-client-guides>
+
 ## 内容结构
 
 - 公共说明：Base URL、API 令牌、分组、模型与计费
