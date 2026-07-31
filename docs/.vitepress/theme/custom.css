@@ -244,3 +244,17 @@ body { text-rendering: optimizeLegibility; }
   .endpoint-copy-button { min-width:62px; padding:0 8px; }
   .endpoint-copy-row code { font-size:11px !important; }
 }
+
+
+.tool-logo { width:27px; height:27px; overflow:visible; fill:none; stroke:currentColor; stroke-width:1.75; stroke-linecap:round; stroke-linejoin:round; transition:transform .2s ease; }
+.tool-logo .icon-soft-circle { opacity:.25; }
+.tool-card:hover .tool-logo { transform:scale(1.08); }
+.dark .tool-mark.tone-violet { color:#e6a17c; border-color:rgba(230,161,124,.22); background:rgba(230,161,124,.10); }
+.dark .tool-mark.tone-emerald { color:#6fd5b5; border-color:rgba(111,213,181,.22); background:rgba(111,213,181,.09); }
+.dark .tool-mark.tone-blue { color:#82aef5; border-color:rgba(130,174,245,.22); background:rgba(130,174,245,.09); }
+.dark .tool-mark.tone-slate { color:#d7dce3; border-color:rgba(215,220,227,.18); background:rgba(215,220,227,.07); }
+.dark .tool-mark.tone-rose { color:#fb8ca4; border-color:rgba(251,140,164,.22); background:rgba(251,140,164,.09); }
+.dark .tool-mark.tone-amber { color:#f6c76e; border-color:rgba(246,199,110,.22); background:rgba(246,199,110,.09); }
+.dark .tool-mark.tone-cyan { color:#6fd6e8; border-color:rgba(111,214,232,.22); background:rgba(111,214,232,.09); }
+.dark .tool-mark.tone-orange { color:#f59a68; border-color:rgba(245,154,104,.22); background:rgba(245,154,104,.09); }
+@media (max-width:480px) { .tool-logo { width:24px; height:24px; } }
