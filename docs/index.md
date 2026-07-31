@@ -1,84 +1,87 @@
 ---
 layout: home
-title: AI 工具接入指南
+title: CodeFlow 接入教程
 titleTemplate: false
-description: CodeFlow API 的 AI 编程工具与客户端配置教程
+description: Claude Code、Codex、Cursor、Cherry Studio 等工具接入 CodeFlow API 的配置教程
 hero:
-  name: AI 工具接入指南
-  text: 一次配置，顺畅使用
-  tagline: 面向 CodeFlow API 的中文客户端接入手册。独立教程、清晰步骤、随时可迁移。
+  name: CodeFlow 使用教程
+  text: 把你的 AI 编程工具接入 CodeFlow
+  tagline: 准备 API 令牌，选择正在使用的软件，照着对应页面完成配置。
   image:
     src: /hero-flow.svg
-    alt: API 与多个 AI 编程工具之间的连接示意图
+    alt: CodeFlow API 配置终端示意图
   actions:
     - theme: brand
-      text: 5 分钟快速开始
+      text: 第一次使用，从这里开始
       link: /guide/quick-start
     - theme: alt
-      text: 浏览全部软件
+      text: 直接选择软件
       link: /tools/
 features:
-  - icon: 📝
-    title: Markdown 优先
-    details: 每个软件一篇独立文档，后续可直接合并到其他网站或文档系统。
-  - icon: 🧭
-    title: 步骤清晰
-    details: 从令牌准备到验证调用，关键地址、配置文件和注意事项集中呈现。
-  - icon: 🌗
-    title: 舒适阅读
-    details: 支持本地搜索、深色模式、移动端导航和清晰的页面目录。
+  - icon: '1'
+    title: 创建 API 令牌
+    details: 注册并进入令牌管理，为正在使用的软件创建一个独立令牌。
+    link: /guide/quick-start
+    linkText: 查看准备步骤
+  - icon: '2'
+    title: 按软件填写配置
+    details: 找到对应教程，复制 Base URL、填入令牌并选择正确模型。
+    link: /tools/
+    linkText: 选择你的软件
+  - icon: '3'
+    title: 发送请求验证
+    details: 发起一次简单对话，并在控制台使用日志中确认调用成功。
+    link: /guide/quick-start
+    linkText: 查看验证方法
 ---
 
-<div class="home-status" aria-label="文档概览">
-  <span><b>8</b> 个软件教程</span>
-  <span><b>29</b> 张步骤截图</span>
-  <span><b>100%</b> Markdown</span>
-  <span class="status-live"><i></i> 持续维护</span>
-</div>
+## 选择你正在使用的软件
 
-## 选择你的工具
-
-<p class="section-lead">不用从头通读，找到你正在使用的软件，照着对应步骤配置即可。</p>
+<p class="section-lead">每个软件都有独立教程，不需要从头阅读全部文档。</p>
 
 <ToolGrid />
 
-## 配置前先记住
+## 开始配置前，准备好这两项
 
 <div class="endpoint-grid">
   <div class="endpoint-card endpoint-primary">
-    <span class="endpoint-label">中国优化线路</span>
-    <code>https://codeflow.asia</code>
-    <p>适合中国用户日常使用，账号、令牌与余额和全球线路互通。</p>
+    <span class="endpoint-label">API 令牌</span>
+    <code>sk-••••••••••••</code>
+    <p>在 CodeFlow 控制台的“令牌管理”中创建。建议每个软件使用一个独立令牌，方便核对用量和设置费用上限。</p>
   </div>
-  <div class="endpoint-card">
-    <span class="endpoint-label">全球加速线路</span>
-    <code>https://cdn.codeflow.asia</code>
-    <p>适合团队、企业和境外网络环境，可随时切换。</p>
+  <div class="endpoint-card endpoint-card-urls">
+    <span class="endpoint-label">Base URL</span>
+    <EndpointCopy />
+    <p>两条线路的账号、令牌和余额互通，可以随时切换。</p>
   </div>
 </div>
 
-::: warning `/v1` 不能凭协议猜测
-Claude Code、Cherry Studio 和 OpenClaw 填写不带 `/v1` 的地址；Cursor、Kilo Code、OpenCode 和 Codex 填写带 `/v1` 的地址。请以具体软件页面为准。
+::: warning 注意地址末尾的 `/v1`
+Claude Code、Cherry Studio 和 OpenClaw 填写不带 `/v1` 的地址；Cursor、Kilo Code、OpenCode 和 Codex 填写带 `/v1` 的地址。不要根据协议自行判断，以对应软件教程为准。
 :::
 
 <div class="home-next">
   <div>
-    <span class="eyebrow">第一次使用？</span>
-    <h3>先完成令牌与分组准备</h3>
-    <p>了解 Base URL、API 令牌、安全保管和计费分组，再进入软件教程。</p>
+    <span class="eyebrow">还没有令牌？</span>
+    <h3>按完整流程完成注册、充值和令牌创建</h3>
+    <p>首次使用建议先走一遍快速接入流程，再返回这里选择软件。</p>
   </div>
 
-[查看接入前置 →](/guide/access)
+[查看快速接入流程 →](/guide/quick-start)
 </div>
 
-## 关于本指南
+## 配置时常见的问题
 
-CodeFlow 站点地址：[https://codeflow.asia/](https://codeflow.asia/)
+<p class="section-lead">地址、令牌、分组或模型不匹配时，可以先从下面找到对应说明。</p>
 
-本文档说明如何将各类 AI 编程工具与客户端接入 CodeFlow。接入方式为替换接口地址与填入令牌，无需修改代码，无需海外网络环境。各工具章节相互独立，可按需查阅。
+<HomeHelp />
 
-![CodeFlow 站点首页](./assets/images/image-13.png)
+<div class="home-next home-next-final">
+  <div>
+    <span class="eyebrow">已经准备好了？</span>
+    <h3>现在选择软件并开始配置</h3>
+    <p>教程中的令牌均为占位符，请替换成你在控制台创建的真实令牌。</p>
+  </div>
 
-::: info 2026 年 7 月 22 日平台升级说明
-原有 `sk-` 令牌继续有效，接入地址未变更，账户余额按 1:1 迁入，订阅剩余时长完整保留，客户端配置无需调整。历史调用明细与用量统计未迁移，消耗记录自升级日重新累计；邀请码全部更新，旧邀请链接失效；令牌不再支持单独设置有效期与模型/IP 限制，令牌层面仅保留“费用限制”。
-:::
+[查看全部软件 →](/tools/)
+</div>

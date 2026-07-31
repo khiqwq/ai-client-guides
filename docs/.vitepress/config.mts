@@ -70,9 +70,10 @@ export default defineConfig({
     lightModeSwitchTitle: '切换到浅色模式',
     darkModeSwitchTitle: '切换到深色模式',
     footer: {
-      message: '文档使用 Markdown 维护，可自由迁移与集成。',
+      message: '选择你的工具，按照步骤完成 CodeFlow API 接入。',
       copyright: 'AI 工具接入指南'
     }
   }
 })
+
 
