@@ -9,22 +9,41 @@ const offsetX = ref(0)
 const offsetY = ref(0)
 const rotation = ref(0)
 const dragging = ref(false)
+const imageElement = ref<HTMLImageElement>()
 const closeButton = ref<HTMLButtonElement>()
 
 const pointers = new Map<number, { x: number; y: number }>()
 let dragStart = { x: 0, y: 0, offsetX: 0, offsetY: 0 }
 let pinchStartDistance = 0
 let pinchStartScale = 1
-let moved = false
+let backdropPress: { pointerId: number; x: number; y: number } | undefined
+let backdropMoved = false
 let previousBodyOverflow = ''
 
 const imageTransform = computed(() => ({
   transform: `translate3d(${offsetX.value}px, ${offsetY.value}px, 0) scale(${scale.value}) rotate(${rotation.value}deg)`
 }))
 const zoomLabel = computed(() => `${Math.round(scale.value * 100)}%`)
+const canPan = computed(() => scale.value > 1.01 || Math.abs(rotation.value % 180) === 90)
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value))
+}
+
+function constrainOffsets() {
+  const image = imageElement.value
+  if (!image) return
+
+  const quarterTurn = Math.abs(rotation.value % 180) === 90
+  const baseWidth = quarterTurn ? image.clientHeight : image.clientWidth
+  const baseHeight = quarterTurn ? image.clientWidth : image.clientHeight
+  const viewportWidth = Math.max(0, window.innerWidth - 32)
+  const viewportHeight = Math.max(0, window.innerHeight - 120)
+  const maxX = Math.max(0, (baseWidth * scale.value - viewportWidth) / 2)
+  const maxY = Math.max(0, (baseHeight * scale.value - viewportHeight) / 2)
+
+  offsetX.value = clamp(offsetX.value, -maxX, maxX)
+  offsetY.value = clamp(offsetY.value, -maxY, maxY)
 }
 
 function resetView() {
@@ -45,6 +64,8 @@ function openImage(img: HTMLImageElement) {
 function close() {
   isOpen.value = false
   pointers.clear()
+  backdropPress = undefined
+  backdropMoved = false
   dragging.value = false
 }
 
@@ -72,6 +93,7 @@ function zoomAt(factor: number, clientX = window.innerWidth / 2, clientY = windo
   offsetX.value = clientX - window.innerWidth / 2 - pointX * nextScale
   offsetY.value = clientY - window.innerHeight / 2 - pointY * nextScale
   scale.value = nextScale
+  constrainOffsets()
 }
 
 function onWheel(event: WheelEvent) {
@@ -95,10 +117,9 @@ function onPointerDown(event: PointerEvent) {
   const target = event.currentTarget as HTMLElement
   target.setPointerCapture(event.pointerId)
   pointers.set(event.pointerId, { x: event.clientX, y: event.clientY })
-  moved = false
 
   if (pointers.size === 1) {
-    dragging.value = true
+    dragging.value = canPan.value
     dragStart = { x: event.clientX, y: event.clientY, offsetX: offsetX.value, offsetY: offsetY.value }
   } else if (pointers.size === 2) {
     dragging.value = false
@@ -113,37 +134,78 @@ function onPointerMove(event: PointerEvent) {
 
   if (pointers.size >= 2 && pinchStartDistance > 0) {
     const next = clamp(pinchStartScale * (pointerDistance() / pinchStartDistance), 0.5, 5.5)
-    if (Math.abs(next - scale.value) > 0.002) moved = true
     scale.value = next
+    constrainOffsets()
     return
   }
 
   if (dragging.value) {
     const dx = event.clientX - dragStart.x
     const dy = event.clientY - dragStart.y
-    if (Math.abs(dx) + Math.abs(dy) > 3) moved = true
     offsetX.value = dragStart.offsetX + dx
     offsetY.value = dragStart.offsetY + dy
+    constrainOffsets()
   }
 }
 
 function onPointerUp(event: PointerEvent) {
   pointers.delete(event.pointerId)
+  pinchStartDistance = 0
   if (pointers.size === 0) {
     dragging.value = false
   } else if (pointers.size === 1) {
     const [point] = pointers.values()
-    dragging.value = true
+    dragging.value = canPan.value
     dragStart = { x: point.x, y: point.y, offsetX: offsetX.value, offsetY: offsetY.value }
   }
 }
 
-function onBackdropClick(event: MouseEvent) {
-  if (event.target === event.currentTarget && !moved) close()
+function isOutsideImageControls(target: EventTarget | null) {
+  return !(target instanceof Element) || !target.closest('.image-lightbox-picture, .image-lightbox-toolbar')
+}
+
+function onBackdropPointerDown(event: PointerEvent) {
+  if (event.button !== 0 && event.pointerType === 'mouse') return
+  if (!isOutsideImageControls(event.target)) return
+
+  backdropPress = { pointerId: event.pointerId, x: event.clientX, y: event.clientY }
+  backdropMoved = false
+  ;(event.currentTarget as HTMLElement).setPointerCapture(event.pointerId)
+}
+
+function onBackdropPointerMove(event: PointerEvent) {
+  if (!backdropPress || backdropPress.pointerId !== event.pointerId) return
+  if (Math.hypot(event.clientX - backdropPress.x, event.clientY - backdropPress.y) > 6) {
+    backdropMoved = true
+  }
+}
+
+function onBackdropPointerUp(event: PointerEvent) {
+  if (!backdropPress || backdropPress.pointerId !== event.pointerId) return
+
+  const shouldClose = !backdropMoved
+  const target = event.currentTarget as HTMLElement
+  if (target.hasPointerCapture(event.pointerId)) target.releasePointerCapture(event.pointerId)
+  backdropPress = undefined
+  backdropMoved = false
+  if (shouldClose) {
+    event.preventDefault()
+    event.stopPropagation()
+    window.setTimeout(close, 0)
+  }
+}
+
+function onBackdropPointerCancel(event: PointerEvent) {
+  if (!backdropPress || backdropPress.pointerId !== event.pointerId) return
+  const target = event.currentTarget as HTMLElement
+  if (target.hasPointerCapture(event.pointerId)) target.releasePointerCapture(event.pointerId)
+  backdropPress = undefined
+  backdropMoved = false
 }
 
 function rotate(delta: number) {
   rotation.value = (rotation.value + delta) % 360
+  constrainOffsets()
 }
 
 function openOriginal() {
@@ -175,12 +237,14 @@ onMounted(() => {
   document.addEventListener('dblclick', onDocumentDoubleClick)
   document.addEventListener('pointerover', onDocumentPointerOver)
   window.addEventListener('keydown', onKeyDown)
+  window.addEventListener('resize', constrainOffsets)
 })
 
 onBeforeUnmount(() => {
   document.removeEventListener('dblclick', onDocumentDoubleClick)
   document.removeEventListener('pointerover', onDocumentPointerOver)
   window.removeEventListener('keydown', onKeyDown)
+  window.removeEventListener('resize', constrainOffsets)
   document.body.style.overflow = previousBodyOverflow
 })
 </script>
@@ -193,24 +257,30 @@ onBeforeUnmount(() => {
       role="dialog"
       aria-modal="true"
       :aria-label="`查看图片：${imageAlt}`"
-      @wheel.prevent="onWheel"
-      @click="onBackdropClick"
+      @pointerdown="onBackdropPointerDown"
+      @pointermove="onBackdropPointerMove"
+      @pointerup="onBackdropPointerUp"
+      @pointercancel="onBackdropPointerCancel"
+      @click.prevent.stop
     >
       <div
         class="image-lightbox-stage"
-        :class="{ dragging }"
-        @pointerdown="onPointerDown"
-        @pointermove="onPointerMove"
-        @pointerup="onPointerUp"
-        @pointercancel="onPointerUp"
-        @dblclick.stop="toggleZoom"
       >
         <img
+          ref="imageElement"
           class="image-lightbox-picture"
+          :class="{ 'can-pan': canPan, dragging }"
           :src="imageSrc"
           :alt="imageAlt"
           :style="imageTransform"
           draggable="false"
+          @load="constrainOffsets"
+          @wheel.prevent.stop="onWheel"
+          @pointerdown.stop="onPointerDown"
+          @pointermove.stop="onPointerMove"
+          @pointerup.stop="onPointerUp"
+          @pointercancel.stop="onPointerUp"
+          @dblclick.stop="toggleZoom"
         />
       </div>
 
@@ -228,7 +298,7 @@ onBeforeUnmount(() => {
 
       <div class="image-lightbox-footer">
         <span v-if="imageAlt">{{ imageAlt }}</span>
-        <small>滚轮缩放 · 拖拽移动 · 双击切换 · Esc 关闭</small>
+        <small>滚轮缩放 · 放大后拖拽 · 双击切换 · 点击图片外关闭</small>
       </div>
     </div>
   </Transition>
