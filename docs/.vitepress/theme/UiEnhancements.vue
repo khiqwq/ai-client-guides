@@ -114,14 +114,19 @@ function onDocumentClick(event: MouseEvent) {
   setTimeout(goToDocumentTop, 0)
 }
 
+function enhanceSearchEventually(attempt = 0) {
+  enhance()
+  if (attempt < 12) setTimeout(() => enhanceSearchEventually(attempt + 1), 80)
+}
+
 function onSearchTrigger(event: MouseEvent) {
   const target = event.target as HTMLElement | null
-  if (target?.closest?.('.DocSearch-Button')) setTimeout(enhance, 0)
+  if (target?.closest?.('.DocSearch-Button')) setTimeout(() => enhanceSearchEventually(), 0)
 }
 
 function onSearchShortcut(event: KeyboardEvent) {
   if (event.key === '/' || (event.key.toLowerCase() === 'k' && (event.metaKey || event.ctrlKey))) {
-    setTimeout(enhance, 0)
+    setTimeout(() => enhanceSearchEventually(), 0)
   }
 }
 
