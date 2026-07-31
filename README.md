@@ -43,7 +43,7 @@ npm run docs:preview
 
 ## 部署
 
-详细步骤见 [`docs/guide/deploy.md`](docs/guide/deploy.md)。简要流程：
+详细步骤见 [`DEPLOYMENT.md`](DEPLOYMENT.md)。简要流程：
 
 1. 创建一个与 CodeFlow 名称无关的通用组织或个人仓库。
 2. 将本项目推送到默认分支 `main`。

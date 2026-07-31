@@ -22,7 +22,7 @@ outline: [2, 3]
 
 填入本站 **Base URL** 地址：`https://codeflow.asia/v1`
 
-![填写基础 URL 与密钥](../assets/images/image-28.png)
+![填写基础 URL 与密钥](../assets/images/image-11.png)
 
 填写`基础URL`与`API密钥`后，Kilo 将自动获取**分组**可用的站内模型
 

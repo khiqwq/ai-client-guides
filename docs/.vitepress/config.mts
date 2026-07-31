@@ -27,7 +27,6 @@ export default defineConfig({
         { text: 'Cursor', link: '/tools/cursor' },
         { text: '更多软件', link: '/tools/cc-switch' }
       ] },
-      { text: '部署说明', link: '/guide/deploy' },
       { text: 'CodeFlow 官网', link: 'https://codeflow.asia/' }
     ],
     sidebar: [
@@ -48,8 +47,7 @@ export default defineConfig({
         { text: 'OpenClaw', link: '/tools/openclaw' }
       ] },
       { text: '更多', items: [
-        { text: '控制台与支持', link: '/guide/console' },
-        { text: '部署到 GitHub Pages', link: '/guide/deploy' }
+        { text: '控制台与支持', link: '/guide/console' }
       ] }
     ],
     search: {

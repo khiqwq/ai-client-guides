@@ -43,7 +43,7 @@ CC Switch 为供应商配置管理工具，通过图形界面配置 Claude Code 
 
 ![填写供应商名称](../assets/images/image-07.png)
 
-![填入配置内容](../assets/images/image-11.png)
+![填入配置内容](../assets/images/image-28.png)
 
 5. 添加成功后，在主界面会看到我们配置的分组，在右侧点击「启用」按钮，显示「使用中」，则配置完成
 

@@ -1,9 +1,3 @@
----
-title: 部署到 GitHub Pages
-description: 将本仓库发布为公开文档网站。
-outline: [2, 3]
----
-
 # 部署到 GitHub Pages
 
 仓库已经包含自动部署流程。你只需要创建一个 GitHub 仓库、推送代码，并在仓库设置中启用 GitHub Actions 作为 Pages 来源。
